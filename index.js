@@ -11,8 +11,9 @@ import os from "os";
 // The child process is separate  — it has its own memory : space where a program stores its variables, objects, and data while running ,
 // thread : 1 main js thread , and resources : cpu etc.
 // The child process runs on the OS, Memory is not shared between parent and child processes — they are isolated at the OS level.
+// Node.js uses OS for memory, CPU, files, network, and async operations
 
-// worker threads vs libuv threads
+// worker threads vs libuv threads :
 
 // worker : Created by You (new Worker())
 // libuv  : automatically used by node
@@ -28,7 +29,7 @@ import os from "os";
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// libuv
+// libuv e.g.
 readFile("x.txt", "utf-8", (err, data) => {
   console.log("File read complete : ", data); // runs on main JS thread
 });
@@ -47,16 +48,12 @@ readFile("x.txt", "utf-8", (err, data) => {
 // runs on another CPU core
 const worker = new Worker("./worker.js");
 
-worker.on("message", (result) => console.log("Worker result:", result));
+worker.on("messageEvent", (result) => console.log("Worker result:", result));
 
 // what is .on ?
-
 // emitter.on(eventName, callback);
-
 // emitter → an object that emits events
-
 // eventName → name of the event to listen for (like 'message', 'data', 'close')
-
 // callback → function to run when the event happens
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -95,7 +92,7 @@ ls.on("close", (code) => {
   console.log(`spawn process exited with code ${code}`);
 });
 
-// fork example (Node.js script)
+// fork example 
 
 console.log("===== fork example =====");
 
@@ -111,3 +108,19 @@ child.send({ hello: "Hello from parent!" });
 
 const cores = os.cpus().length;
 console.log("Number of CPU cores:", cores);
+
+
+///////////////////////////////////////////
+console.log("========= process ============")
+// process
+// It is a global object and it Represents the current Node.js execution environment.
+// Helps interact with: system , environment variables
+console.log(process.env.PORT);
+console.log(process.pid);
+console.log(process.cwd());
+
+
+//process.exit(0); // success
+//process.exit(1); // error
+
+
