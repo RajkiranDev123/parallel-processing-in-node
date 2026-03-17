@@ -1,11 +1,7 @@
-import { exec, spawn, fork } from "child_process"
+import { exec, spawn, fork } from "child_process";
 import { readFile } from "fs";
-import { Worker } from 'worker_threads';
+import { Worker } from "worker_threads";
 import os from "os";
-
-const cores = os.cpus().length;
-console.log("Number of CPU cores:", cores);
-
 
 // Parent Process :	Your main Node.js file (index.js)
 // Child Process  :	dir command, child.js script
@@ -15,7 +11,6 @@ console.log("Number of CPU cores:", cores);
 // The child process is separate  — it has its own memory : space where a program stores its variables, objects, and data while running ,
 // thread : 1 main js thread , and resources : cpu etc.
 // The child process runs on the OS, Memory is not shared between parent and child processes — they are isolated at the OS level.
-
 
 // worker threads vs libuv threads
 
@@ -28,7 +23,6 @@ console.log("Number of CPU cores:", cores);
 // worker : It can run Js , Where JS runs: Directly on the worker thread — not the main thread.
 // libuv  : When it finishes, it tells Node.js to run the JS callback
 
-
 // worker : Run CPU-heavy JavaScript code in parallel to avoid blocking the main thread.Worker threads run inside the same Node process
 // libuv  : Handle background system tasks like reading files, networking, or hashing without blocking the main JavaScript thread.
 
@@ -36,7 +30,7 @@ console.log("Number of CPU cores:", cores);
 
 // libuv
 readFile("x.txt", "utf-8", (err, data) => {
-  console.log("File read complete : ",data); // runs on main JS thread
+  console.log("File read complete : ", data); // runs on main JS thread
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -51,9 +45,9 @@ readFile("x.txt", "utf-8", (err, data) => {
 // 👉 You cannot manually bind a worker to a specific core using standard Node.js APIs.
 
 // runs on another CPU core
-const worker = new Worker('./worker.js');
+const worker = new Worker("./worker.js");
 
-worker.on('message', result => console.log("Worker result:", result));
+worker.on("message", (result) => console.log("Worker result:", result));
 
 // what is .on ?
 
@@ -66,8 +60,10 @@ worker.on('message', result => console.log("Worker result:", result));
 // callback → function to run when the event happens
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 1️⃣ exec example (Windows)
 
+// exec example (Windows)
+
+console.log("===== exec example =====");
 
 exec("dir", (error, stdout, stderr) => {
   if (error) {
@@ -81,10 +77,10 @@ exec("dir", (error, stdout, stderr) => {
   console.log(`exec Output:\n${stdout}`);
 });
 
-// -------------------
-// 2️⃣ spawn example (Windows)
-// -------------------
+// spawn example (Windows)
+
 console.log("===== spawn example =====");
+
 const ls = spawn("dir", { shell: true });
 
 ls.stdout.on("data", (data) => {
@@ -99,10 +95,10 @@ ls.on("close", (code) => {
   console.log(`spawn process exited with code ${code}`);
 });
 
-// -------------------
-// 3️⃣ fork example (Node.js script)
-// -------------------
+// fork example (Node.js script)
+
 console.log("===== fork example =====");
+
 const child = fork("./child.js");
 
 child.on("message", (msg) => {
@@ -110,3 +106,8 @@ child.on("message", (msg) => {
 });
 
 child.send({ hello: "Hello from parent!" });
+
+/////////////////////////////////////////////////////////
+
+const cores = os.cpus().length;
+console.log("Number of CPU cores:", cores);
