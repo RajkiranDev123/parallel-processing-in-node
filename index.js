@@ -32,29 +32,23 @@ console.log("Number of CPU cores:", cores);
 // worker : Run CPU-heavy JavaScript code in parallel to avoid blocking the main thread.Worker threads run inside the same Node process
 // libuv  : Handle background system tasks like reading files, networking, or hashing without blocking the main JavaScript thread.
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // libuv
 readFile("x.txt", "utf-8", (err, data) => {
-  console.log("File read complete!"); // runs on main JS thread
+  console.log("File read complete : ",data); // runs on main JS thread
 });
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // new Worker('./worker.js');
 
 // Node.js asks the OS to create a thread
-
 // The OS scheduler decides:
-
 // which CPU core runs it
-
 // when it runs
 
 // 👉 You cannot manually bind a worker to a specific core using standard Node.js APIs.
-
-
-
-
-// worker 
 
 // runs on another CPU core
 const worker = new Worker('./worker.js');
@@ -71,7 +65,7 @@ worker.on('message', result => console.log("Worker result:", result));
 
 // callback → function to run when the event happens
 
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 1️⃣ exec example (Windows)
 
 
